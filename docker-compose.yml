@@ -1,4 +1,32 @@
 services:
+  mini_x:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    environment:
+      SERVER_HOST: mini_x
+      SERVER_PORT: 8000
+      LOG_LEVEL: DEBUG
+      ENABLE_ACCESS_LOG: true
+      ENABLE_RELOAD: false
+      PG_USERNAME: postgres
+      PG_PASSWORD: postgres
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DATABASE: postgres
+      # TODO: The secret key and pg password should be saved and retrieved from a secret manager
+      #       They are Added here only for the ease of development and shouldn't be in prod!
+      SECRET_KEY: eaddb0ad337ecee62cddf12f246da0c9f195409806f195e9240ed31ef731fbc8
+      SECRET_ACCESS_TOKEN_EXPIRE_MINUTES: 30
+      SECRET_ALGORITHM: HS256
+
+    volumes:
+      - .:/app
+
+    depends_on:
+      - postgres
+
   postgres:
     image: postgres:16.3-alpine
     environment:

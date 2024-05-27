@@ -1,0 +1,8 @@
+*
+!mini_x/
+!poetry.lock
+!pyproject.toml
+!README.md
+
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
