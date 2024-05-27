@@ -11,9 +11,12 @@ fastapi = "^0.111.0"
 pydantic = "^2.7.1"
 pyjwt = "^2.8.0"
 passlib = {version="^1.7.4", extras=["bcrypt"]}
-sqlalchemy = "^2.0.30"
+sqlalchemy = {version="^2.0.30", extras=["asyncpg"]}
 alembic = "^1.13.1"
 psycopg2-binary = "^2.9.9"
+pydantic-settings = "^2.2.1"
+psycopg2 = "^2.9.9"
+asyncpg = "^0.29.0"
 
 [tool.poetry.group.lint.dependencies]
 ruff = "^0.4.5"
