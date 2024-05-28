@@ -2,6 +2,7 @@ services:
   mini_x:
     build:
       context: .
+      target: runtime
     ports:
       - "8000:8000"
     environment:
@@ -24,6 +25,22 @@ services:
     volumes:
       - .:/app
 
+    depends_on:
+      - postgres
+      - run_migration
+
+  run_migration:
+    build:
+      context: .
+      target: migration
+    environment:
+      PG_USERNAME: postgres
+      PG_PASSWORD: postgres
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DATABASE: postgres
+    volumes:
+      - .:/app
     depends_on:
       - postgres
 
