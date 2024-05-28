@@ -25,12 +25,11 @@ class User(Base):
     zip_code = Column(String, nullable=True, index=True)
     city = Column(String, nullable=True, index=True)
     country = Column(String, nullable=True, index=True)
-
     created_at = Column(
-        DateTime(timezone=True), default=datetime.utcnow, nullable=False
+        DateTime(timezone=False), default=datetime.utcnow, nullable=False
     )
     updated_at = Column(
-        DateTime(timezone=True),
+        DateTime(timezone=False),
         default=datetime.utcnow,
         onupdate=datetime.utcnow,
         nullable=False,
