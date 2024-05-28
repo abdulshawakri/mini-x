@@ -11,6 +11,9 @@ from mini_x.repositories.user.user import UserRepository
 from mini_x.repositories.user.user_abc import UserRepositoryABC
 from mini_x.services.user.user_service import UserService
 from mini_x.settings.secrets_settings import get_secret_settings, SecretSettings
+from repositories.blog.blog import BlogRepository
+from repositories.blog.blog_abc import BlogRepositoryABC
+from services.blog.blog_service import BlogService
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=TOKEN_URL)
 
@@ -26,6 +29,18 @@ def get_user_service(
     secret_settings: Annotated[SecretSettings, Depends(get_secret_settings)],
 ) -> UserService:
     return UserService(user_repo, secret_settings)
+
+
+def get_blog_repository(
+    session: Annotated[AsyncSession, Depends(get_session)],
+) -> BlogRepositoryABC:
+    return BlogRepository(session)
+
+
+def get_blog_service(
+    blog_repo: Annotated[BlogRepositoryABC, Depends(get_blog_repository)],
+) -> BlogService:
+    return BlogService(blog_repo)
 
 
 async def get_current_user_from_token(

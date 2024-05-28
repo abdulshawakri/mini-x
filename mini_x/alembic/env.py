@@ -20,6 +20,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 
 from mini_x.infra.db.models.user import User  # noqa: F401, E402
+from mini_x.infra.db.models.blog import BlogPost  # noqa: F401, E402
 
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata

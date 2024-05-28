@@ -1,14 +1,20 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, String, DateTime
+from sqlalchemy import Column, String, DateTime, UniqueConstraint
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from mini_x.infra.db.base import Base
 
 
 class User(Base):
     __tablename__ = "users"
+
+    __table_args__ = (
+        UniqueConstraint("username", name="uq_user_username"),
+        UniqueConstraint("email", name="uq_user_email"),
+    )
 
     id = Column(
         UUID(as_uuid=True),
@@ -34,3 +40,5 @@ class User(Base):
         onupdate=datetime.utcnow,
         nullable=False,
     )
+
+    posts = relationship("BlogPost", back_populates="author")
