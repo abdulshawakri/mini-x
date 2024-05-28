@@ -39,8 +39,9 @@ def get_blog_repository(
 
 def get_blog_service(
     blog_repo: Annotated[BlogRepositoryABC, Depends(get_blog_repository)],
+    user_service: Annotated[UserService, Depends(get_user_service)],
 ) -> BlogService:
-    return BlogService(blog_repo)
+    return BlogService(blog_repo, user_service)
 
 
 async def get_current_user_from_token(

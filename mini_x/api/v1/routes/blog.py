@@ -6,7 +6,6 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from mini_x.api.v1.dependancies import (
     get_current_user_from_token,
     get_blog_service,
-    get_user_service,
 )
 from mini_x.api.v1.models.blog import (
     BlogPostRead,
@@ -15,7 +14,7 @@ from mini_x.api.v1.models.blog import (
     BlogPostDelete,
 )
 from mini_x.services.blog.blog_service import BlogService
-from mini_x.services.user.user_service import UserService
+from mini_x.services.blog.error import BlogServiceUnAuthorizedException
 
 router = APIRouter()
 
@@ -26,13 +25,11 @@ router = APIRouter()
 async def create_post(
     post_data: BlogPostCreate,
     user_from_token: Annotated[str, Depends(get_current_user_from_token)],
-    user_service: Annotated[UserService, Depends(get_user_service)],
     blog_service: Annotated[BlogService, Depends(get_blog_service)],
 ):
     try:
-        current_user = await user_service.get_current_user(user_from_token)
         return await blog_service.create_post(
-            user_id=current_user.id, post_data=post_data
+            post_data=post_data, user_from_token=user_from_token
         )
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
@@ -43,18 +40,12 @@ async def update_post(
     post_id: UUID,
     post_data: BlogPostUpdate,
     user_from_token: Annotated[str, Depends(get_current_user_from_token)],
-    user_service: Annotated[UserService, Depends(get_user_service)],
     blog_service: Annotated[BlogService, Depends(get_blog_service)],
 ):
     try:
-        current_user = await user_service.get_current_user(user_from_token)
-        post = await blog_service.get_post_by_id(post_id)
-        if post.user_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Not authorized to update this post",
-            )
-        return await blog_service.update_post(post_id, post_data=post_data)
+        return await blog_service.update_post(post_id, post_data, user_from_token)
+    except BlogServiceUnAuthorizedException as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
@@ -63,19 +54,12 @@ async def update_post(
 async def delete_post(
     post_id: UUID,
     user_from_token: Annotated[str, Depends(get_current_user_from_token)],
-    user_service: Annotated[UserService, Depends(get_user_service)],
     blog_service: Annotated[BlogService, Depends(get_blog_service)],
 ) -> BlogPostDelete:
     try:
-        current_user = await user_service.get_current_user(user_from_token)
-        post = await blog_service.get_post_by_id(post_id)
-        if post.user_id != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Not authorized to delete this post",
-            )
-        await blog_service.delete_post(post_id)
-        return BlogPostDelete(post_id=post_id, message="Post successfully deleted")
+        return await blog_service.delete_post(post_id, user_from_token)
+    except BlogServiceUnAuthorizedException as e:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e))
 
