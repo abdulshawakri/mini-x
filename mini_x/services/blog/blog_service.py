@@ -1,12 +1,12 @@
 from uuid import UUID
 
 from mini_x.api.v1.models.blog import BlogPostCreate, BlogPostRead, BlogPostUpdate
-from mini_x.repositories.blog.blog import BlogRepository
+from mini_x.repositories.blog.blog_abc import BlogRepositoryABC
 from mini_x.services.blog.error import BlogServiceException
 
 
 class BlogService:
-    def __init__(self, blog_repository: BlogRepository):
+    def __init__(self, blog_repository: BlogRepositoryABC):
         self.blog_repository = blog_repository
 
     async def create_post(

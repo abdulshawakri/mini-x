@@ -7,13 +7,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from mini_x.authentication.auth_handler import decode_access_token
 from mini_x.constants import TOKEN_URL
 from mini_x.infra.db.session import get_session
+from mini_x.repositories.blog.blog import BlogRepository
+from mini_x.repositories.blog.blog_abc import BlogRepositoryABC
 from mini_x.repositories.user.user import UserRepository
 from mini_x.repositories.user.user_abc import UserRepositoryABC
+from mini_x.services.blog.blog_service import BlogService
 from mini_x.services.user.user_service import UserService
 from mini_x.settings.secrets_settings import get_secret_settings, SecretSettings
-from repositories.blog.blog import BlogRepository
-from repositories.blog.blog_abc import BlogRepositoryABC
-from services.blog.blog_service import BlogService
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=TOKEN_URL)
 

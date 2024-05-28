@@ -1,5 +1,6 @@
 import uuid
 from datetime import timedelta
+from typing import TYPE_CHECKING
 
 from mini_x.api.v1.models.user import UserCreate, UserRead, UserUpdate
 from mini_x.authentication.auth_handler import (
@@ -15,10 +16,13 @@ from mini_x.services.user.error import (
 )
 from mini_x.settings.secrets_settings import SecretSettings
 
+if TYPE_CHECKING:
+    from mini_x.repositories.user.user_abc import UserRepositoryABC
+
 
 class UserService:
     def __init__(
-        self, user_repository: UserRepositoryABC, secret_settings: SecretSettings
+        self, user_repository: "UserRepositoryABC", secret_settings: SecretSettings
     ) -> None:
         self._user_repository = user_repository
         self._secret_settings = secret_settings

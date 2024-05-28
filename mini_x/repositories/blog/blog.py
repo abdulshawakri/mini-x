@@ -6,7 +6,7 @@ from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 
 from mini_x.infra.db.models.blog import BlogPost
-from repositories.blog.blog_abc import BlogRepositoryABC
+from mini_x.repositories.blog.blog_abc import BlogRepositoryABC
 
 
 class BlogRepository(BlogRepositoryABC):
@@ -46,9 +46,11 @@ class BlogRepository(BlogRepositoryABC):
         async with self._session.begin():
             post = await self._get_post_by_id(post_id)
 
-            if post:
-                post.content = content  # type: ignore[assignment]
-                await self._session.merge(post)
+            if not post:
+                return None
+
+            post.content = content  # type: ignore[assignment]
+            await self._session.merge(post)
             return post
 
     async def delete_post(self, post_id: uuid.UUID) -> None:

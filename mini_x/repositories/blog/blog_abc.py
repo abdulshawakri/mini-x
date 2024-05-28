@@ -21,7 +21,7 @@ class BlogRepositoryABC(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    async def update_post(self, post_id: uuid.UUID, content: str) -> BlogPost:
+    async def update_post(self, post_id: uuid.UUID, content: str) -> BlogPost | None:
         raise NotImplementedError
 
     @abstractmethod
