@@ -13,6 +13,14 @@ class UserBase(BaseModel):
     country: str | None = None
 
 
+class UserUpdate(BaseModel):
+    full_name: str | None = None
+    street_address: str | None = None
+    zip_code: str | None = None
+    city: str | None = None
+    country: str | None = None
+
+
 class UserCreate(UserBase):
     password: SecretStr
 
